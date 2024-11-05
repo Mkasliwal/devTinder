@@ -1,0 +1,23 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "Express application service as a part of learning",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mkasliwal/devTinder.git"
+  },
+  "author": "Mayur Kasliwal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mkasliwal/devTinder/issues"
+  },
+  "homepage": "https://github.com/Mkasliwal/devTinder#readme",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
