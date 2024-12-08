@@ -1,10 +1,9 @@
 // deps
 const express = require('express');
 const connectDb = require('./config/database');
-const User = require('./models/user');
-const { validateSignUpReq, validateLogin } = require('./utils/validators');
 const cookieParser = require('cookie-parser');
-const { userAuth } = require('./middlewares/auth');
+const authRouter = require('../src/routes/auth');
+const profileRouter = require('../src/routes/profile');
 
 const PRIVATE_KEY = 'd3vTind3r@express'
 
