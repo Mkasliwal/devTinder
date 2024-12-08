@@ -3,9 +3,8 @@ const express = require('express');
 const connectDb = require('./config/database');
 const User = require('./models/user');
 const { validateSignUpReq, validateLogin } = require('./utils/validators');
-const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
+const { userAuth } = require('./middlewares/auth');
 
 const PRIVATE_KEY = 'd3vTind3r@express'
 
@@ -43,47 +42,31 @@ app.post('/signup', async (req, res) => {
 // login
 app.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
-        validateLogin({ email, password });
-        
+        const { email, password } = req.body;        
         const registeredUser = await User.findOne({ email });
 
         if(!registeredUser) {
             throw new Error('Invalid credentials');
         }
 
-        const match = await bcrypt.compare(password, registeredUser.password);
-        if(!match) {
-            throw new Error('Invalid credentials');
-        }
+        await registeredUser.validatePassword(password);
 
-        // sign jwt
-        const token = jwt.sign({ _id: registeredUser.id }, PRIVATE_KEY);
+        const token = await registeredUser.signToken();
 
         res.cookie('token', token);
         res.send(`Hey ${registeredUser.firstName}, Welcome to devTinder 🧑🏾‍💻✨`);
     } catch(err) {
-        res.status(404).send(`ERROR: ${err}`);
+        res.status(404).send(`ERROR: ${err.message}`);
     }
 });
 
-app.get('/profile', async (req, res) => {   
+app.get('/profile', userAuth, async (req, res) => {   
     try {
-        const cookies = req.cookies;
-        const { token } = cookies;
-
-        const verifideToken = jwt.verify(token, PRIVATE_KEY);
-        const { _id } = verifideToken;
-
-        const user = await User.findOne({_id});
-        if(user) {
-            res.send(`Hello, Welcome ${user.name}`);
-        } else {
-            res.status(404).send(`Error: User not found`);
-        }
+        const user = req.user;
+        res.send(`Hello, Welcome ${user.firstName}`);
     } catch (err) {
         console.log(err);
-        res.status(403).send(`Error: ${err}`);
+        res.status(400).send(`Error: ${err.message}`);
     }
 });
 
