@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+// constants
+const PRIVATE_KEY = 'd3vTind3r@express';
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -58,6 +63,25 @@ const userSchema = new mongoose.Schema({
         default: "This is a default description of a user..."
     }
 }, { timestamps: true });
+
+const userMethods = userSchema.methods;
+
+userMethods.signToken = async function () {
+    const user = this;
+    const token = await jwt.sign({ _id: user.password}, PRIVATE_KEY, {expiresIn: '1d'});
+    return token;
+};
+
+userMethods.validatePassword = async function (userPasswordInput) {
+    const user = this;
+    const match = await bcrypt.compare(userPasswordInput, user.password);
+
+    if(!match) {
+        throw Error('Password is Invalid');
+    }
+}
+
+
 
 const User = mongoose.model('User', userSchema);
 
