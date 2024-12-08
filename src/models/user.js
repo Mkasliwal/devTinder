@@ -68,7 +68,7 @@ const userMethods = userSchema.methods;
 
 userMethods.signToken = async function () {
     const user = this;
-    const token = await jwt.sign({ _id: user.password}, PRIVATE_KEY, {expiresIn: '1d'});
+    const token = await jwt.sign({ _id: user._id }, PRIVATE_KEY, {expiresIn: '1d'});
     return token;
 };
 
