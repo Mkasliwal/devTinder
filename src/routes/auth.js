@@ -39,7 +39,10 @@ authRouter.post('/login', async (req, res) => {
         const token = await registeredUser.signToken();
 
         res.cookie('token', token);
-        res.send(`Hey ${registeredUser.firstName}, You've logged into devTinder 🔥`);
+        res.send({
+            message: `Hey ${registeredUser.firstName}, You've logged into devTinder 🔥`,
+            data: registeredUser
+        });
     } catch(err) {
         res.status(404).send(`ERROR: ${err.message}`);
     }
