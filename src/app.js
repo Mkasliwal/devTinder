@@ -4,8 +4,7 @@ const connectDb = require('./config/database');
 const cookieParser = require('cookie-parser');
 const authRouter = require('../src/routes/auth');
 const profileRouter = require('../src/routes/profile');
-
-const PRIVATE_KEY = 'd3vTind3r@express'
+const connectionRequestRouter = require('../src/routes/connectionRequests');
 
 const app = express();
 const PORT = 29000;
@@ -16,7 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // bind routes
-app.use('/', authRouter, profileRouter);
+app.use('/', authRouter, profileRouter, connectionRequestRouter);
 
 // connect to a database
 connectDb()
