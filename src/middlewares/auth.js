@@ -6,7 +6,7 @@ const userAuth = async (req, res, next) => {
     try {
         const { token } = req.cookies;
         if(!token) {
-            throw Error("Please login to view your Profile");
+            throw Error("Looks like you're not logged in");
         }
 
         const decodeToken = jwt.verify(token, PRIVATE_KEY);
