@@ -23,12 +23,11 @@ profileRouter.post('/profile/edit', userAuth, async (req, res) => {
         Object.keys(body).forEach((key) => user[key] = body[key]);
         await user.save();
         res.send({
-            message: `Hello, Welcome ${user.firstName}`,
+            message: "✨ Data Updated Succeessfully",
             data: user
         });
     } catch (err) {
-        console.log(err);
-        res.status(400).send(`Error: ${err.message}`);
+        res.status(400).send(`⚠️ Error: ${err.message}`);
     }
 });
 
