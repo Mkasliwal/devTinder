@@ -25,7 +25,28 @@ const validateLogin = (req) => {
     }
 }
 
+const validateProfileEditFields = (req) => {
+    const editables = [
+        'firstName',
+        'lastName',
+        'age',
+        'gender',
+        'photoUrl',
+        'skills',
+        'about'
+    ];
+
+    const isAllowed = Object.keys(req).every(key => editables.includes(key));
+    
+    if(!isAllowed) {
+        throw Error('Pass only editable fields');
+    }
+
+    return isAllowed;
+}
+
 module.exports = {
     validateSignUpReq,
-    validateLogin
+    validateLogin,
+    validateProfileEditFields
 }
