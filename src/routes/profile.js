@@ -17,6 +17,11 @@ profileRouter.get('/profile/view', userAuth, async (req, res) => {
 profileRouter.post('/profile/edit', userAuth, async (req, res) => {
     try {
         const user = req.user;
+        const body = req.body;
+        validateProfileEditFields(body);
+
+        Object.keys(body).forEach((key) => user[key] = body[key]);
+        await user.save();
         res.send({
             message: `Hello, Welcome ${user.firstName}`,
             data: user
