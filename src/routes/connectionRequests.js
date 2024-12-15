@@ -5,12 +5,18 @@ const ConnectionRequest = require('../models/connectionRequest');
 const User = require('../models/user');
 
 connectionRequestRouter.post(
-    '/request/:status/:toUserId',
+    '/request/send/:status/:toUserId',
     userAuth,
     async (req, res) => {
         try {
             const { status, toUserId } = req.params;
             const fromUserId = req.user._id;
+
+            // check valid status types
+            const allowedStatus = ['interested', 'ignored'];
+            if (!allowedStatus.includes(status)) {
+                throw Error('Invalid request status!');
+            }
 
             // toUser Exists?
             const toUser = await User.findById(toUserId);
@@ -24,8 +30,9 @@ connectionRequestRouter.post(
             }
 
             // if request already exists
-            const isRequestExists = await ConnectionRequest.find({
+            const isRequestExists = await ConnectionRequest.findOne({
                 $or: [
+                    { fromUserId, toUserId },
                     {
                         toUserId: fromUserId,
                     },
