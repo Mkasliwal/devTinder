@@ -5,10 +5,10 @@ const { validateProfileEditFields } = require('../utils/validators');
 
 profileRouter.get('/profile/view', userAuth, async (req, res) => {
     try {
-        const user = req.user;
+        const self = req.user;
         res.send({
-            message: `✨ Hello, Welcome ${user.firstName}`,
-            data: user,
+            message: `✨ Hello, Welcome ${self.firstName}`,
+            data: self,
         });
     } catch (err) {
         res.status(400).send(`⚠️ Error: ${err.message}`);
@@ -17,15 +17,15 @@ profileRouter.get('/profile/view', userAuth, async (req, res) => {
 
 profileRouter.post('/profile/edit', userAuth, async (req, res) => {
     try {
-        const user = req.user;
+        const self = req.user;
         const body = req.body;
         validateProfileEditFields(body);
 
-        Object.keys(body).forEach((key) => user[key] = body[key]);
-        await user.save();
+        Object.keys(body).forEach((key) => self[key] = body[key]);
+        await self.save();
         res.send({
             message: "✨ Data Updated Succeessfully",
-            data: user
+            data: self
         });
     } catch (err) {
         res.status(400).send(`⚠️ Error: ${err.message}`);
